@@ -11,6 +11,12 @@ This project aims to predict breast cancer outcomes using machine learning class
 
 The purpose of this project is to use machine learning techniques to predict the presence of breast cancer based on the provided dataset. Early detection can significantly improve survial rating, and by classifying the tumors as either benign or malignant, these models can help in making timely and accurate medical decisions. The models are evaluated using several performance metrics such as accuracy, precision, recall, F1 score, and ROC-AUC to determine their effectiveness in real-world applications.
 
+## Files 
+- **Copilot Chat Log** : Copilot help
+- **Breast Cancer Classification Model Performance Analysis**: Contains Explanation of best model
+- **SKlearn8**: Updated code use this one
+- **SKlearn6**: Not full updated code
+  
 ## Dataset
 
 The dataset used is the **Breast Cancer Wisconsin dataset** from Scikit-learn. It includes the following:
