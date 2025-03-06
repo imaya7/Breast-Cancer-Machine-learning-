@@ -22,7 +22,17 @@ The dataset used is the **Breast Cancer Wisconsin dataset** from Scikit-learn. I
 - Numpy as np
 - Pandas as pd
 - Sklearn
-  
+
+## Sklearn Modules Used 
+- **datasets**:  Provides built-in datasets
+- **metrics**: measurements 
+- **model_selection**: split data into testing and training 
+- **preprocessing**: cleans and prepares data 
+- **linear_model**:making predictions 
+- **ensemble**: combines models 
+- **tree**: decision tree models 
+
+
 ## Models Used
 
 - **Logistic Regression**: predict whether something belongs to one of two categories (by likeloodhood) 
@@ -54,4 +64,7 @@ The following metrics are used to evaluate the models:
   - Features with higher importance have a greater impact on the model's decision-making process.
 
 ## Limitations 
- 
+ - Limited data may not represent all types or conditions of breast cancer
+ - Data set size is on the smaller end and may limit the models
+ - There could be overfiting and the models might struggle on new data 
+   
