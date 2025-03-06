@@ -14,8 +14,8 @@ The purpose of this project is to use machine learning techniques to predict the
 ## Files 
 - **Copilot Chat Log** : Copilot help
 - **Breast Cancer Classification Model Performance Analysis**: Contains Explanation of best model
-- **SKlearn8**: Updated code use this one
-- **SKlearn6**: Not full updated code
+- **SKlearn8**: Python code 
+- **SKlearn6**: What the results should look like 
   
 ## Dataset
 
