@@ -1,139 +1,107 @@
-# Import necessary libraries
-import numpy as np
-import pandas as pd
-from sklearn.datasets import load_breast_cancer
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score, confusion_matrix, classification_report
-from sklearn.linear_model import LogisticRegression
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.tree import DecisionTreeClassifier
+The results the code should generate 
 
-# Load the breast cancer dataset
-data = load_breast_cancer()
-x = data.data  # Features
-y = data.target  # Target labels
+Dataset shape: (569, 30)
+Feature names: ['mean radius' 'mean texture' 'mean perimeter' 'mean area'
+ 'mean smoothness' 'mean compactness' 'mean concavity'
+ 'mean concave points' 'mean symmetry' 'mean fractal dimension'
+ 'radius error' 'texture error' 'perimeter error' 'area error'
+ 'smoothness error' 'compactness error' 'concavity error'
+ 'concave points error' 'symmetry error' 'fractal dimension error'
+ 'worst radius' 'worst texture' 'worst perimeter' 'worst area'
+ 'worst smoothness' 'worst compactness' 'worst concavity'
+ 'worst concave points' 'worst symmetry' 'worst fractal dimension']
+Target names: ['malignant' 'benign']
+Class distribution: [212 357]
 
-# Display basic information about the dataset
-print(f"Dataset shape: {x.shape}")
-print(f"Feature names: {data.feature_names}")
-print(f"Target names: {data.target_names}")
-print(f"Class distribution: {np.bincount(y)}")
+Logistic Regression Results:
+Accuracy: 0.9737
+Precision: 0.9722
+Recall: 0.9859
+F1 Score: 0.9790
+ROC-AUC: 0.9974
+Confusion Matrix:
+[[41  2]
+ [ 1 70]]
 
-# Split the data into training and testing sets (80% train, 20% test)
-xTrain, xTest, yTrain, yTest = train_test_split(x, y, test_size=0.2, random_state=42)
+Classification Report:
+              precision    recall  f1-score   support
 
-# Standardize the features to have mean 0 and variance 1
-scaler = StandardScaler()
-xTrainScaled = scaler.fit_transform(xTrain)
-xTestScaled = scaler.transform(xTest)
+   malignant       0.98      0.95      0.96        43
+      benign       0.97      0.99      0.98        71
 
-# Function to evaluate a model's performance
-def evaluateModel(model, xTrain, xTest, yTrain, yTest, modelName):
-    # Train the model
-    model.fit(xTrain, yTrain)
-    
-    # Make predictions
-    yPred = model.predict(xTest)
-    
-    # Get the probabilities for ROC-AUC if possible
-    if hasattr(model, "predict_proba"):
-        yProb = model.predict_proba(xTest)[:, 1]
-    else:
-        # For models that don't have predict_proba, use decision_function or predictions
-        yProb = model.decision_function(xTest) if hasattr(model, "decision_function") else yPred
-    
-    # Calculate metrics
-    accuracy = accuracy_score(yTest, yPred)
-    precision = precision_score(yTest, yPred)
-    recall = recall_score(yTest, yPred)
-    f1 = f1_score(yTest, yPred)
-    rocAuc = roc_auc_score(yTest, yProb)
-    confMatrix = confusion_matrix(yTest, yPred)
-    
-    # Print results
-    print(f"\n{modelName} Results:")
-    print(f"Accuracy: {accuracy:.4f}")
-    print(f"Precision: {precision:.4f}")
-    print(f"Recall: {recall:.4f}")
-    print(f"F1 Score: {f1:.4f}")
-    print(f"ROC-AUC: {rocAuc:.4f}")
-    print("Confusion Matrix:")
-    print(confMatrix)
-    print("\nClassification Report:")
-    print(classification_report(yTest, yPred, target_names=data.target_names))
-    
-    return {
-        "modelName": modelName,
-        "model": model,
-        "accuracy": accuracy,
-        "precision": precision,
-        "recall": recall,
-        "f1": f1,
-        "rocAuc": rocAuc,
-        "confMatrix": confMatrix
-    }
+    accuracy                           0.97       114
+   macro avg       0.97      0.97      0.97       114
+weighted avg       0.97      0.97      0.97       114
 
-# Train and evaluate different models
 
-# Logistic Regression Model
-logRegModel = LogisticRegression(max_iter=1000, random_state=42)
-logRegResults = evaluateModel(logRegModel, xTrainScaled, xTestScaled, yTrain, yTest, "Logistic Regression")
+Random Forest Results:
+Accuracy: 0.9649
+Precision: 0.9589
+Recall: 0.9859
+F1 Score: 0.9722
+ROC-AUC: 0.9953
+Confusion Matrix:
+[[40  3]
+ [ 1 70]]
 
-# Random Forest Model
-rfModel = RandomForestClassifier(n_estimators=100, random_state=42)
-rfResults = evaluateModel(rfModel, xTrainScaled, xTestScaled, yTrain, yTest, "Random Forest")
+Classification Report:
+              precision    recall  f1-score   support
 
-# Decision Tree Model
-dtModel = DecisionTreeClassifier(random_state=42)
-dtResults = evaluateModel(dtModel, xTrainScaled, xTestScaled, yTrain, yTest, "Decision Tree")
+   malignant       0.98      0.93      0.95        43
+      benign       0.96      0.99      0.97        71
 
-# Combine the results and calculate the overall best model
-results = [logRegResults, rfResults, dtResults]
+    accuracy                           0.96       114
+   macro avg       0.97      0.96      0.96       114
+weighted avg       0.97      0.96      0.96       114
 
-# Calculate an overall score for each model by averaging the metrics
-for result in results:
-    result["overallScore"] = (result["accuracy"] + result["precision"] + result["recall"] + result["f1"] + result["rocAuc"]) / 5
 
-# Find the best model based on the overall score
-bestModel = max(results, key=lambda x: x["overallScore"])
+Decision Tree Results:
+Accuracy: 0.9474
+Precision: 0.9577
+Recall: 0.9577
+F1 Score: 0.9577
+ROC-AUC: 0.9440
+Confusion Matrix:
+[[40  3]
+ [ 3 68]]
 
-# Also, find the best models for each individual metric
-bestAccuracyModel = max(results, key=lambda x: x["accuracy"])
-bestPrecisionModel = max(results, key=lambda x: x["precision"])
-bestRecallModel = max(results, key=lambda x: x["recall"])
-bestF1Model = max(results, key=lambda x: x["f1"])
-bestRocAucModel = max(results, key=lambda x: x["rocAuc"])
+Classification Report:
+              precision    recall  f1-score   support
 
-# Print out the best models for each metric
-print("\nBest Models by Metric:")
-print(f"Best Overall Model: {bestModel['modelName']} (Score: {bestModel['overallScore']:.4f})")
-print(f"Best Accuracy: {bestAccuracyModel['modelName']} ({bestAccuracyModel['accuracy']:.4f})")
-print(f"Best Precision: {bestPrecisionModel['modelName']} ({bestPrecisionModel['precision']:.4f})")
-print(f"Best Recall: {bestRecallModel['modelName']} ({bestRecallModel['recall']:.4f})")
-print(f"Best F1 Score: {bestF1Model['modelName']} ({bestF1Model['f1']:.4f})")
-print(f"Best ROC-AUC: {bestRocAucModel['modelName']} ({bestRocAucModel['rocAuc']:.4f})")
+   malignant       0.93      0.93      0.93        43
+      benign       0.96      0.96      0.96        71
 
-# Analyze feature importance for the best model
-print(f"\nFeature Importance for {bestModel['modelName']}:")
+    accuracy                           0.95       114
+   macro avg       0.94      0.94      0.94       114
+weighted avg       0.95      0.95      0.95       114
 
-# Logistic Regression uses coefficients as feature importance
-if bestModel['modelName'] == "Logistic Regression":
-    coefficients = pd.DataFrame(
-        {'feature': data.feature_names,
-         'coefficient': np.abs(bestModel['model'].coef_[0])}  # Absolute value of coefficients
-    ).sort_values('coefficient', ascending=False)
-    
-    print("\nTop 10 Important Features (Logistic Regression):")
-    print(coefficients.head(10))
 
-# Random Forest and Decision Tree models use feature importances
-elif bestModel['modelName'] in ["Random Forest", "Decision Tree"]:
-    featureImportances = pd.DataFrame(
-        {'feature': data.feature_names,
-         'importance': bestModel['model'].feature_importances_}
-    ).sort_values('importance', ascending=False)
-    
-    modelType = "Random Forest" if bestModel['modelName'] == "Random Forest" else "Decision Tree"
-    print(f"\nTop 10 Important Features ({modelType}):")
-    print(featureImportances.head(10))
+Best Models by Metric:
+Best Overall Model: Logistic Regression (Score: 0.9816)
+Best Accuracy: Logistic Regression (0.9737)
+Best Precision: Logistic Regression (0.9722)
+Best Recall: Logistic Regression (0.9859)
+Best F1 Score: Logistic Regression (0.9790)
+Best ROC-AUC: Logistic Regression (0.9974)
+
+Feature Importance for Logistic Regression:
+
+Top 10 Important Features (Logistic Regression):
+                 feature  coefficient
+21         worst texture     1.350606
+10          radius error     1.268178
+28        worst symmetry     1.208200
+7    mean concave points     1.119804
+26       worst concavity     0.943053
+13            area error     0.907186
+20          worst radius     0.879840
+23            worst area     0.841846
+6         mean concavity     0.801458
+27  worst concave points     0.778217
+
+  
+
+
+
+
+        
